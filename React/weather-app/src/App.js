@@ -1,18 +1,22 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import react from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import WeatherProvider from './context/WeatherContext';
 import HomePage from './pages/HomePage';
 
-const App = () => {
+function App() {
   return (
-    <WeatherProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-        </Routes>
-      </Router>
-    </WeatherProvider>
+    <div>
+      <WeatherProvider>
+        <Router>
+          <Routes>
+            <Route>
+              <Route path="/" element={<HomePage />} />
+            </Route>
+          </Routes>     
+        </Router>
+      </WeatherProvider>     
+    </div>
   );
-};
+}
 
 export default App;

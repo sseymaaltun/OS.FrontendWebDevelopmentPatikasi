@@ -1,38 +1,36 @@
-import React, { createContext, useState, useEffect } from 'react';
+//Şehir bilgisini ve hava durumu verisini uygulama genelinde yönetmek için bir Context
+import react, { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 
-export const WeatherContext = createContext();
+export const WeatherContext = createContext(); //yeni bir context oluşturma
 
-const API_KEY = 'BURAYA_OWN_API_ANAHTARINI_YAZ';
+const API_KEY = "03007765f5a2f0755dddfab969b0a31a";
 
-const WeatherProvider = ({ children }) => {
-  const [weatherData, setWeatherData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [city, setCity] = useState('Konya');
+//Context sağlayıcısını tanımlaması
+const WeatherProvider = ({children}) => {
+    const [weatherData, setWeatherData] = useState([]); 
+    const [loading, setLoading] = useState(true);
+    const [city, setCity] = useState("İstanbul");
 
-  const fetchWeatherData = async (city) => {
-    setLoading(true);
-    try {
-      const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=0f69c6e701c75a48d587ca306d6eaa94&units=metric&lang=tr`
-      );
-      setWeatherData(response.data.list);
-    } catch (error) {
-      console.error('Hava durumu verisi alınamadı:', error);
-      setWeatherData([]);
-    }
-    setLoading(false);
-  };
+    useEffect (() => { // Şehir değiştiğinde hava durumu verilerini al
+    if (!city) return;
 
-  useEffect(() => {
-    fetchWeatherData(city);
-  }, [city]);
+    setLoading(true); 
 
-  return (
-    <WeatherContext.Provider value={{ weatherData, loading, city, setCity }}>
-      {children}
+    axios(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric&lang=tr`)
+    .then(response => setWeatherData(response.data.list)) // API'den gelen veriyi state'e kaydet
+    .catch(error => {
+        console.log("Veri alınamadı",error)
+        setWeatherData([])
+    }) // Hata durumunda state'i boş bir dizi olarak ayarla
+    .finally(() => setLoading(false)); //// loading false yaparak "Yükleniyor..." yazısını kaldırıyoruz
+},[city]);
+
+return ( // WeatherContext.Provider ile context'i sağlayarak alt bileşenlere veri aktarımı
+    <WeatherContext.Provider value = {{weatherData, loading, city, setCity}}>
+        {children}
     </WeatherContext.Provider>
-  );
+) 
 };
 
-export default WeatherProvider;
+export default WeatherProvider; 

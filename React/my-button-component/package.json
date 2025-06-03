@@ -1,0 +1,14 @@
+{
+  "name": "seyma-button",
+  "version": "1.0.0",
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "index.js",
+    "src"
+  ],
+  "keywords": ["react", "button", "ui"],
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0"
+  }
+}
